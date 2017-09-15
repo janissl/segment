@@ -117,7 +117,7 @@ public class SrxTextIterator extends AbstractTextIterator {
 	 */
 	public SrxTextIterator(SrxDocument document, String languageCode, 
 			CharSequence text, Map<String, Object> parameterMap) {
-		Map<String, Object> newParameterMap = new HashMap<String, Object>(parameterMap);
+		Map<String, Object> newParameterMap = new HashMap<>(parameterMap);
 		newParameterMap.put(MARGIN_PARAMETER, 0);
 		init(document, languageCode, new TextManager(text), newParameterMap);
 	}
@@ -179,6 +179,7 @@ public class SrxTextIterator extends AbstractTextIterator {
 	 * @throws IllegalStateException if buffer is too small to hold the segment
 	 * @throws IORuntimeException if IO error occurs when reading the text
 	 */
+        @Override
 	public String next() {
 		if (hasNext()) {
 
@@ -215,16 +216,20 @@ public class SrxTextIterator extends AbstractTextIterator {
 						minMatcher = getMinMatcher();						
 
 					}
-					
-					end = minMatcher.getBreakPosition();
+                                        
+					if (minMatcher != null) {
+                                            end = minMatcher.getBreakPosition();
 
-					if (end > start) {
-						found = isException(minMatcher);
-						if (found) {
-							cutMatchers();
-						}
-					}
-					
+                                            if (end > start) {
+                                                    found = isException(minMatcher);
+                                                    if (found) {
+                                                            cutMatchers();
+                                                    }
+                                            }
+                                        }
+                                        else {
+                                            return "";
+                                        }
 				}
 				
 				moveMatchers();
@@ -244,6 +249,7 @@ public class SrxTextIterator extends AbstractTextIterator {
 	/**
 	 * @return true if there are more segments
 	 */
+        @Override
 	public boolean hasNext() {
 		return (textManager.hasMoreText() || 
 				start < textManager.getText().length());
@@ -301,7 +307,7 @@ public class SrxTextIterator extends AbstractTextIterator {
 	 * text from textManager.
 	 */
 	private void initMatchers() {
-		this.ruleMatcherList = new LinkedList<RuleMatcher>();
+		this.ruleMatcherList = new LinkedList<>();
 		for (Rule rule : ruleManager.getBreakRuleList()) {
 			RuleMatcher matcher = 
 				new RuleMatcher(document, rule, textManager.getText());
