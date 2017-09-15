@@ -11,8 +11,12 @@ import java.util.Map;
 
 import net.loomchild.segment.srx.LanguageRule;
 import net.loomchild.segment.srx.SrxDocument;
-import net.loomchild.segment.srx.io.bind.*;
 import net.loomchild.segment.srx.SrxParser;
+import net.loomchild.segment.srx.io.bind.Body;
+import net.loomchild.segment.srx.io.bind.Languagemap;
+import net.loomchild.segment.srx.io.bind.Languagerule;
+import net.loomchild.segment.srx.io.bind.Rule;
+import net.loomchild.segment.srx.io.bind.Srx;
 import net.loomchild.segment.util.Bind;
 
 import org.apache.commons.logging.Log;
@@ -27,13 +31,13 @@ import org.apache.commons.logging.LogFactory;
  */
 public class Srx2Parser implements SrxParser {
 
-	private static final Log log = LogFactory.getLog(Srx2Parser.class);
+	private static final Log LOG = LogFactory.getLog(Srx2Parser.class);
 
 	private static final String CONTEXT = "net.loomchild.segment.srx.io.bind";
 	
 	private static final String SCHEMA = "net/loomchild/segment/res/xml/srx20.xsd";
 
-	private static Bind bind = createBind();
+	private static final Bind BIND = createBind();
 
 	private static Bind createBind() {
         // Macintosh Java 1.5 work-around borrowed from okapi library
@@ -58,54 +62,54 @@ public class Srx2Parser implements SrxParser {
 	 * @param reader
 	 * @return initialized document
 	 */
+        @Override
 	public SrxDocument parse(Reader reader) {
-		Srx srx = (Srx) bind.unmarshal(reader);
+                LanguageRule languageRule;
+                Srx srx = (Srx) BIND.unmarshal(reader);
 
-		SrxDocument document = new SrxDocument();
-		document.setCascade("yes".equals(srx.getHeader().getCascade()));
+                SrxDocument document = new SrxDocument();
+                document.setCascade("yes".equals(srx.getHeader().getCascade()));
 
-		Body body = srx.getBody();
+                Body body = srx.getBody();
 
-		Map<String, LanguageRule> languageRuleMap = new HashMap<String, LanguageRule>();
-		for (Languagerule lr : body.getLanguagerules().getLanguagerule()) {
-			LanguageRule languageRule = new LanguageRule(lr
-					.getLanguagerulename());
-			for (Rule r : lr.getRule()) {
-				boolean breakRule = !"no".equals(r.getBreak());
+                Map<String, LanguageRule> languageRuleMap = new HashMap<>();
+                for (Languagerule lr : body.getLanguagerules().getLanguagerule()) {
+                        languageRule = new LanguageRule(lr.getLanguagerulename());
+                        for (Rule r : lr.getRule()) {
+                                boolean breakRule = !"no".equals(r.getBreak());
 
-				String before;
-				if (r.getBeforebreak() != null) {
-					before = r.getBeforebreak().getContent();
-				} else {
-					before = "";
-				}
+                                String before;
+                                if (r.getBeforebreak() != null) {
+                                        before = r.getBeforebreak().getContent();
+                                } else {
+                                        before = "";
+                                }
 
-				String after;
-				if (r.getAfterbreak() != null) {
-					after = r.getAfterbreak().getContent();
-				} else {
-					after = "";
-				}
+                                String after;
+                                if (r.getAfterbreak() != null) {
+                                        after = r.getAfterbreak().getContent();
+                                } else {
+                                        after = "";
+                                }
 
-				net.loomchild.segment.srx.Rule rule = new net.loomchild.segment.srx.Rule(breakRule, before, after);
-				languageRule.addRule(rule);
-			}
-			languageRuleMap.put(languageRule.getName(), languageRule);
-		}
+                                net.loomchild.segment.srx.Rule rule = new net.loomchild.segment.srx.Rule(breakRule, before, after);
+                                languageRule.addRule(rule);
+                        }
+                        languageRuleMap.put(languageRule.getName(), languageRule);
+                }
 
-		for (Languagemap lm : body.getMaprules().getLanguagemap()) {
-			LanguageRule languageRule = languageRuleMap.get(lm
-					.getLanguagerulename());
-			if (languageRule == null) {
-				log.warn("Language map \"" + lm.getLanguagepattern()
-						+ "\": language rule \"" + lm.getLanguagerulename()
-						+ "\" not found.");
-			} else {
-				document.addLanguageMap(lm.getLanguagepattern(), languageRule);
-			}
-		}
+                for (Languagemap lm : body.getMaprules().getLanguagemap()) {
+                        languageRule = languageRuleMap.get(lm.getLanguagerulename());
+                        if (languageRule == null) {
+                                LOG.warn("Language map \"" + lm.getLanguagepattern()
+                                                + "\": language rule \"" + lm.getLanguagerulename()
+                                                + "\" not found.");
+                        } else {
+                                document.addLanguageMap(lm.getLanguagepattern(), languageRule);
+                        }
+                }
 
-		return document;
+                return document;
 	}
 
 }

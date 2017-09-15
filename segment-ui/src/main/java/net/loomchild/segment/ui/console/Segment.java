@@ -37,14 +37,13 @@ import net.loomchild.segment.srx.legacy.FastTextIterator;
 import net.loomchild.segment.srx.legacy.ScannerSrxTextIterator;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.internal.runners.TextListener;
+import org.junit.internal.TextListener;
 import org.junit.runner.JUnitCore;
 
 /**
@@ -54,7 +53,7 @@ import org.junit.runner.JUnitCore;
  */
 public class Segment {
 
-	private static final Log log = LogFactory.getLog(Segment.class);
+	private static final Log LOG = LogFactory.getLog(Segment.class);
 
 	private enum Algorithm {
 		accurate, fast, ultimate, scanner;
@@ -77,7 +76,7 @@ public class Segment {
 
 	public static final String TEST_SUITE_CLASS_NAME = "net.loomchild.segment.SegmentTestSuite";
 
-	private Random random;
+	private final Random random = new Random();
 	private String text;
 	private boolean stdinReader;
 	private boolean stdoutWriter;
@@ -92,14 +91,13 @@ public class Segment {
 	}
 
 	public Segment() {
-		this.random = new Random();
 	}
 
 	private void run(String[] args) throws Exception {
 		Options options = createOptions();
 		HelpFormatter helpFormatter = new HelpFormatter();
-		CommandLineParser parser = new PosixParser();
-		CommandLine commandLine = null;
+                DefaultParser parser = new DefaultParser();
+		CommandLine commandLine;
 
 		try {
 
@@ -209,7 +207,7 @@ public class Segment {
 
 	private void test() {
 		JUnitCore core = new JUnitCore();
-		core.addListener(new TextListener());
+		core.addListener(new TextListener(System.out));
 		try {
 			Class<?> klass = Class.forName(TEST_SUITE_CLASS_NAME);
 			core.run(klass);
@@ -386,7 +384,7 @@ public class Segment {
 		srxReader.close();
 
 		if (profile) {
-			System.out.println(System.currentTimeMillis() - start + " ms.");
+			System.out.println("" + (System.currentTimeMillis() - start) + " ms.");
 		}
 
 		return document;
@@ -445,7 +443,7 @@ public class Segment {
 		srxDocument.addLanguageMap(".*", languageRule);
 
 		if (profile) {
-			System.out.println(System.currentTimeMillis() - start + " ms.");
+			System.out.println("" + (System.currentTimeMillis() - start) + " ms.");
 		}
 
 		return srxDocument;
@@ -493,7 +491,7 @@ public class Segment {
 		performSegment(commandLine, textIterator, writer, profile);
 
 		if (profile) {
-			System.out.println(System.currentTimeMillis() - start + " ms.");
+			System.out.println("" + (System.currentTimeMillis() - start) + " ms.");
 		}
 
 	}
@@ -546,33 +544,40 @@ public class Segment {
 
 		long start = System.currentTimeMillis();
 
-		if (algorithm == Algorithm.accurate) {
-			if (text != null) {
-				textIterator = new AccurateSrxTextIterator(document, languageCode, text);
-			} else {
-				throw new IllegalArgumentException("For accurate algorithm preload option (-r) is mandatory.");
-			}
-		} else if (algorithm == Algorithm.ultimate) {
-			if (text != null) {
-				textIterator = new SrxTextIterator(document, languageCode, text, parameterMap);
-			} else {
-				textIterator = new SrxTextIterator(document, languageCode, reader, parameterMap);
-			}
-		} else if (algorithm == Algorithm.fast) {
-			if (text != null) {
-				textIterator = new FastTextIterator(document, languageCode, text, parameterMap);
-			} else {
-				textIterator = new FastTextIterator(document, languageCode, reader, parameterMap);
-			}
-		} else if (algorithm == Algorithm.scanner) {
-			if (text != null) {
-				textIterator = new ScannerSrxTextIterator(document, languageCode, text, parameterMap);
-			} else {
-				textIterator = new ScannerSrxTextIterator(document, languageCode, reader, parameterMap);
-			}
-		} else {
-			throw new IllegalArgumentException("Unknown algorithm: " + algorithm + ".");
-		}
+		if (null == algorithm) {
+                    throw new IllegalArgumentException("Unknown algorithm: " + algorithm + ".");
+                } else switch (algorithm) {
+                case accurate:
+                    if (text != null) {
+                        textIterator = new AccurateSrxTextIterator(document, languageCode, text);
+                    } else {
+                        throw new IllegalArgumentException("For accurate algorithm preload option (-r) is mandatory.");
+                    }
+                    break;
+                case ultimate:
+                    if (text != null) {
+                        textIterator = new SrxTextIterator(document, languageCode, text, parameterMap);
+                    } else {
+                        textIterator = new SrxTextIterator(document, languageCode, reader, parameterMap);
+                    }
+                    break;
+                case fast:
+                    if (text != null) {
+                        textIterator = new FastTextIterator(document, languageCode, text, parameterMap);
+                    } else {
+                        textIterator = new FastTextIterator(document, languageCode, reader, parameterMap);
+                    }
+                    break;
+                case scanner:
+                    if (text != null) {
+                        textIterator = new ScannerSrxTextIterator(document, languageCode, text, parameterMap);
+                    } else {
+                        textIterator = new ScannerSrxTextIterator(document, languageCode, reader, parameterMap);
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown algorithm: " + algorithm + ".");
+            }
 
 		if (profile) {
 			System.out.println(System.currentTimeMillis() - start + " ms.");
@@ -608,7 +613,7 @@ public class Segment {
 		}
 
 		if (profile) {
-			System.out.println(System.currentTimeMillis() - start + " ms.");
+			System.out.println("" + (System.currentTimeMillis() - start) + " ms.");
 		}
 
 	}
@@ -628,7 +633,6 @@ public class Segment {
 	}
 
 	private void transform(CommandLine commandLine) throws IOException {
-
 		Reader reader;
 		if (commandLine.hasOption('i')) {
 			reader = createFileReader(commandLine.getOptionValue('i'));
@@ -673,7 +677,7 @@ public class Segment {
 				reader.close();
 			}
 		} catch (IOException e) {
-			log.error("Error cleaning up reader.", e);
+			LOG.error("Error cleaning up reader.", e);
 		}
 	}
 
@@ -693,7 +697,7 @@ public class Segment {
 				}
 			}
 		} catch (IOException e) {
-			log.error("Error cleaning up writer.", e);
+			LOG.error("Error cleaning up writer.", e);
 		}
 	}
 
