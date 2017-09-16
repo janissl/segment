@@ -228,21 +228,7 @@ public class SrxTextIterator extends AbstractTextIterator {
                                             if (found) {
                                                 cutMatchers();
                                             }
-                                        }
-                                        
-//					if (minMatcher != null) {
-//                                            end = minMatcher.getBreakPosition();
-//
-//                                            if (end > start) {
-//                                                    found = isException(minMatcher);
-//                                                    if (found) {
-//                                                            cutMatchers();
-//                                                    }
-//                                            }
-//                                        }
-//                                        else {
-//                                            return "";
-//                                        }
+                                        }                                       
 				}
 				
 				moveMatchers();
