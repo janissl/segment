@@ -65,7 +65,8 @@ public class Segment {
 
 	public static final String DEFAULT_SRX = "net/loomchild/segment/res/xml/default.srx";
 
-	public static final String EOLN = System.getProperty("line.separator");
+//	public static final String EOLN = System.getProperty("line.separator");
+        public static final String EOLN = "\n";
 
 	public static final String DEFAULT_BEGIN_SEGMENT = "";
 	public static final String DEFAULT_END_SEGMENT = EOLN;
