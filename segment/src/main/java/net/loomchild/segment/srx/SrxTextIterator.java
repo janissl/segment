@@ -194,42 +194,53 @@ public class SrxTextIterator extends AbstractTextIterator {
 				
 				RuleMatcher minMatcher = getMinMatcher();
 				
-				if (minMatcher == null && !textManager.hasMoreText()) {
+                                if (minMatcher == null && !textManager.hasMoreText()) {
 
-					found = true;
-					end = textManager.getText().length();
-				
-				} else {
-					
-					if (textManager.hasMoreText() && 
-							(minMatcher == null || 
-							minMatcher.getBreakPosition() > 
-							textManager.getBufferLength() - margin)) {
-						
-						if (start == 0) {
-							throw new IllegalStateException("Buffer too short");
-						}
-						
-						textManager.readText(start);
-						start = 0;
-						initMatchers();
-						minMatcher = getMinMatcher();						
+                                        found = true;
+                                        end = textManager.getText().length();
 
-					}
-                                        
-                                        if (minMatcher == null) {
-                                            continue;
+                                } else {
+
+                                        if (textManager.hasMoreText()
+                                                && (minMatcher == null
+                                                || minMatcher.getBreakPosition()
+                                                > textManager.getBufferLength() - margin)) {
+
+                                                if (start == 0) {
+                                                        CharSequence bufferText = textManager.getText();
+                                                        for (int i = textManager.getBufferLength() - margin; i >= 0; --i) {
+                                                                if (bufferText.charAt(i) == '\n') {
+                                                                        found = true;
+                                                                        end = i;
+                                                                        break;
+                                                                }
+                                                        }
+
+                                                        if (!found) {
+                                                                throw new IllegalStateException("Buffer too short - abnormal length of segment (exceeds 65408 characters");
+                                                        }
+
+                                                        break;
+                                                }
+
+                                                textManager.readText(start);
+                                                start = 0;
+                                                initMatchers();
+                                                minMatcher = getMinMatcher();
+
                                         }
-                                        
-                                        end = minMatcher.getBreakPosition();
-                                        
-                                        if (end > start) {
-                                            found = isException(minMatcher);
-                                            if (found) {
-                                                cutMatchers();
-                                            }
-                                        }                                       
-				}
+
+                                        if (minMatcher != null) {
+                                                end = minMatcher.getBreakPosition();
+
+                                                if (end > start) {
+                                                        found = isException(minMatcher);
+                                                        if (found) {
+                                                                cutMatchers();
+                                                        }
+                                                }
+                                        }
+                                }
 				
 				moveMatchers();
 			}
