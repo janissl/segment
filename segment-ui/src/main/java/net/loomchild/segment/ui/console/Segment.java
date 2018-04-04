@@ -609,16 +609,8 @@ public class Segment {
 		while (textIterator.hasNext()) {
 			String segment = textIterator.next();
 			writer.write(beginSegment);
-
-                        if (!segment.endsWith("\n")) {
-                                segment = segment.trim();
-                        }
-
-                        writer.write(segment);
-
-                        if (!segment.endsWith("\n")) {
-                                writer.write(endSegment);
-                        }
+			writer.write(segment);
+			writer.write(endSegment);
 		}
 
 		if (profile) {
