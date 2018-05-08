@@ -207,6 +207,7 @@ public class SrxTextIterator extends AbstractTextIterator {
                                                 > textManager.getBufferLength() - margin)) {
 
                                                 if (start == 0) {
+                                                	    // NOTE: another solution would be to increase buffer length
                                                         CharSequence bufferText = textManager.getText();
                                                         for (int i = textManager.getBufferLength() - margin; i >= 0; --i) {
                                                                 if (bufferText.charAt(i) == '\n') {
@@ -217,7 +218,9 @@ public class SrxTextIterator extends AbstractTextIterator {
                                                         }
 
                                                         if (!found) {
-                                                                throw new IllegalStateException("Buffer too short - abnormal length of segment (exceeds 65408 characters");
+                                                                throw new IllegalStateException(String.format(
+																	"Buffer too short (a segment exceeds %d characters)",
+																	textManager.getBufferLength() - margin));
                                                         }
 
                                                         break;
