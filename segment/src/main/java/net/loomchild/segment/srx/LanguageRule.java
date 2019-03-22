@@ -23,7 +23,7 @@ public class LanguageRule {
 	 * @param ruleList rule list (it will be shallow copied)
 	 */
 	public LanguageRule(String name, List<Rule> ruleList) {
-		this.ruleList = new ArrayList<Rule>(ruleList);
+		this.ruleList = new ArrayList<>(ruleList);
 		this.name = name;
 	}
 
@@ -33,7 +33,7 @@ public class LanguageRule {
 	 * @param name language rule name
 	 */
 	public LanguageRule(String name) {
-		this(name, new ArrayList<Rule>());
+		this(name, new ArrayList<>());
 	}
 
 	/**

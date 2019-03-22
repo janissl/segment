@@ -29,7 +29,7 @@ public class SrxDocument {
 	 */
 	public SrxDocument(boolean cascade) {
 		this.cascade = cascade;
-		this.languageMapList = new ArrayList<LanguageMap>();
+		this.languageMapList = new ArrayList<>();
 		this.cache = new SrxDocumentCache();
 	}
 
@@ -81,7 +81,7 @@ public class SrxDocument {
 	 * @return matching language rules
 	 */
 	public List<LanguageRule> getLanguageRuleList(String languageCode) {
-		List<LanguageRule> matchingLanguageRuleList = new ArrayList<LanguageRule>();
+		List<LanguageRule> matchingLanguageRuleList = new ArrayList<>();
 		for (LanguageMap languageMap : languageMapList) {
 			if (languageMap.matches(languageCode)) {
 				matchingLanguageRuleList.add(languageMap.getLanguageRule());

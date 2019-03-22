@@ -40,7 +40,7 @@ import net.loomchild.segment.util.Util;
  *
  * In streaming version of this algorithm character buffer is searched. 
  * When the end of it is reached or break position is in the margin 
- * (break position > buffer size - margin) and there is more text, 
+ * (break position &gt; buffer size - margin) and there is more text,
  * the buffer is moved in the text until it starts after last found segment. 
  * If this happens rule matchers are reinitialized and the text is searched again.
  * Streaming version has a limitation that read buffer must be at least as long 
@@ -57,7 +57,7 @@ public class SrxTextIterator extends AbstractTextIterator {
 	/**
 	 * Margin size. Used in streaming splitter.
 	 * If rule is matched but its position is in the margin 
-	 * (position > bufferLength - margin) then the matching is ignored, 
+	 * (position &gt; bufferLength - margin) then the matching is ignored,
 	 * and more text is read and rule is matched again.
 	 */
 	public static final String MARGIN_PARAMETER = "margin";
@@ -82,7 +82,7 @@ public class SrxTextIterator extends AbstractTextIterator {
 	 * Default size of read buffer when using streaming version of this class.
 	 * Any segment cannot be longer than buffer size.
 	 */
-	public static final int DEFAULT_BUFFER_LENGTH = 64 * 1024;
+	public static final int DEFAULT_BUFFER_LENGTH = 1024 * 1024;
 
 	/** 
 	 * Default max lookbehind construct length parameter.
@@ -93,7 +93,8 @@ public class SrxTextIterator extends AbstractTextIterator {
 
 	private String segment;
 
-	private int start, end;
+	private int start;
+	private int end;
 	
 	private TextManager textManager;
 	
@@ -140,7 +141,7 @@ public class SrxTextIterator extends AbstractTextIterator {
 	 * text from reader using buffer with given size and margin. Single
 	 * segment cannot be longer than buffer size.
 	 * If rule is matched but its position is in the margin 
-	 * (position > bufferLength - margin) then the matching is ignored, 
+	 * (position &gt; bufferLength - margin) then the matching is ignored,
 	 * and more text is read and rule is matched again.
 	 * This is needed because incomplete rule can be located at the end of the 
 	 * buffer and never matched. 
@@ -169,7 +170,7 @@ public class SrxTextIterator extends AbstractTextIterator {
 	 */
 	public SrxTextIterator(SrxDocument document, String languageCode, 
 			Reader reader) {
-		this(document, languageCode, reader, new HashMap<String, Object>());
+		this(document, languageCode, reader, new HashMap<>());
 	}
 
 	/**

@@ -14,7 +14,7 @@ public class SrxDocumentCache {
 	private Map<String, Object> map;
 	
 	public SrxDocumentCache() {
-		this.map = new ConcurrentHashMap<String, Object>();
+		this.map = new ConcurrentHashMap<>();
 	}
 	
 	/**
@@ -23,8 +23,7 @@ public class SrxDocumentCache {
 	 * @return value object
 	 */
 	public Object get(String key) {
-		Object value = map.get(key);
-		return value;
+		return map.get(key);
 	}
 
 	/**

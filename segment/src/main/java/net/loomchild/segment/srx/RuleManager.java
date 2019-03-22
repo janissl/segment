@@ -42,8 +42,8 @@ public class RuleManager {
 		this.document = document;
 		this.maxLookbehindConstructLength = maxLookbehindConstructLength;
 		
-		this.breakRuleList = new ArrayList<Rule>();
-		this.exceptionPatternMap = new HashMap<Rule, Pattern>();
+		this.breakRuleList = new ArrayList<>();
+		this.exceptionPatternMap = new HashMap<>();
 
 		StringBuilder exceptionPatternBuilder = new StringBuilder();
 		
