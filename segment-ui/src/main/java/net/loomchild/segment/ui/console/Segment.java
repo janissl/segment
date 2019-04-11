@@ -608,9 +608,12 @@ public class Segment {
 
 		while (textIterator.hasNext()) {
 			String segment = textIterator.next();
-			writer.write(beginSegment);
-			writer.write(segment);
-			writer.write(endSegment);
+
+			if (segment != null) {
+				writer.write(beginSegment);
+				writer.write(segment.trim());
+				writer.write(endSegment);
+			}
 		}
 
 		if (profile) {
