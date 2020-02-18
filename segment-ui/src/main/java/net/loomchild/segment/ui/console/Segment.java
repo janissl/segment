@@ -247,9 +247,7 @@ public class Segment {
 
 	private Reader createFileReader(String fileName) throws IOException {
 		InputStream inputStream = getFileInputStream(fileName);
-		Reader reader = getReader(inputStream);
-
-		return reader;
+		return getReader(inputStream);
 	}
 
 	private Reader createRandomTextReader(String generateTextOption,
@@ -268,8 +266,7 @@ public class Segment {
 			}
 		}
 
-		Reader reader = new StringReader(text);
-		return reader;
+		return new StringReader(text);
 	}
 
 	private String generateText(String generateTextOption) {
@@ -329,9 +326,7 @@ public class Segment {
 
 	private Writer createFileWriter(String fileName) {
 		OutputStream outputStream = getFileOutputStream(fileName);
-		Writer writer = getWriter(outputStream);
-
-		return writer;
+		return getWriter(outputStream);
 	}
 
 	private SrxDocument createSrxDocument(CommandLine commandLine,
@@ -473,8 +468,7 @@ public class Segment {
 			}
 		}
 		regex.append(')');
-		Rule rule = new Rule(false, regex + "\\.", " ");
-		return rule;
+		return new Rule(false, regex + "\\.", " ");
 	}
 
 	private void createAndSegment(CommandLine commandLine,
