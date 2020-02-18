@@ -67,7 +67,7 @@ public class AccurateSrxTextIterator extends AbstractTextIterator {
 				initMatchers();
 			}
 			boolean found = false;
-			while ((ruleMatcherList.size() > 0) && !found) {
+			while (!ruleMatcherList.isEmpty() && !found) {
 				RuleMatcher minMatcher = getMinMatcher();
 				endPosition = minMatcher.getBreakPosition();
 				if (minMatcher.getRule().isBreak() && 
