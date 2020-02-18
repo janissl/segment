@@ -121,10 +121,10 @@ public class RuleManager {
 		
 		patternBuilder.append("(?:");
 		if (beforePattern.length() > 0) {
-			patternBuilder.append("(?<=" + beforePattern + ")");
+			patternBuilder.append("(?<=").append(beforePattern).append(")");
 		}
 		if (afterPattern.length() > 0) {
-			patternBuilder.append("(?=" + afterPattern + ")");
+			patternBuilder.append("(?=").append(afterPattern).append(")");
 		}
 		patternBuilder.append(")");
 		

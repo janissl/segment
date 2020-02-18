@@ -69,8 +69,7 @@ public class Buffer implements CharSequence {
 			throw new IndexOutOfBoundsException("Buffer index " + index
 					+ " not in <0, " + length() + ").");
 		} else {
-			char character = buffer[(head + index) % getCapacity()];
-			return character;
+			return buffer[(head + index) % getCapacity()];
 		}
 	}
 

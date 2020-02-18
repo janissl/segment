@@ -1,7 +1,5 @@
 package net.loomchild.segment.srx.io;
 
-import static net.loomchild.segment.util.Util.getSchema;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -33,7 +31,7 @@ public class Srx1Transformer implements SrxTransformer {
 
 	private static final String SCHEMA = "net/loomchild/segment/res/xml/srx10.xsd";
 
-	private static Templates templates = Util.getTemplates(Util.getReader(Util.getResourceStream(STYLESHEET)));;
+	private static Templates templates = Util.getTemplates(Util.getReader(Util.getResourceStream(STYLESHEET)));
 
 	private static Schema schema = Util.getSchema(Util.getReader(Util.getResourceStream(SCHEMA)));
 
@@ -74,9 +72,8 @@ public class Srx1Transformer implements SrxTransformer {
 					.getAbsolutePath()));
 			transform(reader, writer, parameterMap);
 			writer.close();
-			Reader resultReader = Util.getReader(Util.getFileInputStream(file
+			return Util.getReader(Util.getFileInputStream(file
 					.getAbsolutePath()));
-			return resultReader;
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

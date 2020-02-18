@@ -50,10 +50,9 @@ public class Srx2Parser implements SrxParser {
 		
 		// Must pass the ClassLoader directly due to Java 1.5 bugs when using 
 		// custom ClassLoader.
-		Bind bind = new Bind(
+		return new Bind(
 				getContext(CONTEXT, Srx2Parser.class.getClassLoader()),
 				getSchema(getReader(getResourceStream(SCHEMA))));
-		return bind;
 	}
 	
 	/**

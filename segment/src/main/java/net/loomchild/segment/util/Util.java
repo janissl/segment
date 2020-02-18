@@ -69,8 +69,7 @@ public class Util {
 	 */
 	public static Reader getReader(InputStream inputStream) {
 		try {
-			Reader reader = new InputStreamReader(inputStream, "utf-8");
-			return reader;
+			return new InputStreamReader(inputStream, "utf-8");
 		} catch (UnsupportedEncodingException e) {
 			throw new IORuntimeException(e);
 		}
@@ -83,8 +82,7 @@ public class Util {
 	 */
 	public static Writer getWriter(OutputStream outputStream) {
 		try {
-			Writer writer = new OutputStreamWriter(outputStream, "utf-8");
-			return writer;
+			return new OutputStreamWriter(outputStream, "utf-8");
 		} catch (UnsupportedEncodingException e) {
 			throw new IORuntimeException(e);
 		}
@@ -188,9 +186,8 @@ public class Util {
             try {
                 URL manifestUrl = new URL(manifestPath);
                 InputStream manifestStream = manifestUrl.openStream();
-                Manifest manifest = new Manifest(manifestStream);
-                return manifest;
-            } 
+                return new Manifest(manifestStream);
+            }
             catch (IOException e) {
             	throw new ResourceNotFoundException(
             			"IO Error retrieving manifest.", e);
@@ -264,8 +261,7 @@ public class Util {
 			}
 			SchemaFactory schemaFactory = SchemaFactory
 					.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			Schema schema = schemaFactory.newSchema(sourceArray);
-			return schema;
+			return schemaFactory.newSchema(sourceArray);
 		} catch (SAXException e) {
 			throw new XmlException("Error creating XML Schema.", e);
 		}
@@ -277,9 +273,8 @@ public class Util {
 	 * @return XML source from given reader and with given schema 
 	 */
 	public static Source getSource(Reader reader, Schema schema) {
-		Source source = new SAXSource(getXmlReader(schema),
+		return new SAXSource(getXmlReader(schema),
 				new InputSource(reader));
-		return source;
 	}
 
 	/**
@@ -289,8 +284,7 @@ public class Util {
 	 */
 	public static JAXBContext getContext(String context) {
 		try {
-			JAXBContext jaxbContext = JAXBContext.newInstance(context);
-			return jaxbContext;
+			return JAXBContext.newInstance(context);
 		} catch (JAXBException e) {
 			throw new XmlException("Error creating JAXB context", e);
 		}
@@ -305,8 +299,7 @@ public class Util {
 	public static JAXBContext getContext(String context, 
 			ClassLoader classLoader) {
 		try {
-			JAXBContext jaxbContext = JAXBContext.newInstance(context, classLoader);
-			return jaxbContext;
+			return JAXBContext.newInstance(context, classLoader);
 		} catch (JAXBException e) {
 			throw new XmlException("Error creating JAXB context", e);
 		}
@@ -320,8 +313,7 @@ public class Util {
 	 */
 	public static JAXBContext getContext(Class<?>... classesToBeBound) {
 		try {
-			JAXBContext jaxbContext = JAXBContext.newInstance(classesToBeBound);
-			return jaxbContext;
+			return JAXBContext.newInstance(classesToBeBound);
 		} catch (JAXBException e) {
 			throw new XmlException("Error creating JAXB context", e);
 		}

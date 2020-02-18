@@ -32,14 +32,14 @@ public class MergedPattern {
 		
 		StringBuilder breakingPatternBuilder = new StringBuilder();
 		
-		this.nonBreakingPatternList = new ArrayList<Pattern>();
+		this.nonBreakingPatternList = new ArrayList<>();
 		
 		// This list contains indexes of last breaking rules that occur before
 		// given non breaking pattern on the list. 
 		// It has the same size as nonBreakingPatternList.
 		// It is needed to recognize which non breaking rules to use for
 		// given braking rule.
-		this.breakingRuleIndexList = new ArrayList<Integer>();
+		this.breakingRuleIndexList = new ArrayList<>();
 		
 		// Number or breaking rules already added to breaking pattern.
 		int breakingRuleIndex = 0;
@@ -100,7 +100,7 @@ public class MergedPattern {
 	 */
 	public List<Pattern> getNonBreakingPatternList(int breakingRuleIndex) {
 		
-		List<Pattern> result = new ArrayList<Pattern>();
+		List<Pattern> result = new ArrayList<>();
 		
 		Iterator<Pattern> patternIterator = nonBreakingPatternList.iterator();
 		
@@ -120,7 +120,7 @@ public class MergedPattern {
 	 * @return merged list of rules form given language rules
 	 */
 	private List<Rule> extractRules(List<LanguageRule> languageRuleList) {
-		List<Rule> ruleList = new ArrayList<Rule>();
+		List<Rule> ruleList = new ArrayList<>();
 		for (LanguageRule languageRule : languageRuleList) {
 			ruleList.addAll(languageRule.getRuleList());
 		}
@@ -135,7 +135,7 @@ public class MergedPattern {
 	 * @return list of grouped rules
 	 */
 	private List<List<Rule>> groupRules(List<Rule> ruleList) {
-		List<List<Rule>> ruleGroupList = new ArrayList<List<Rule>>();
+		List<List<Rule>> ruleGroupList = new ArrayList<>();
 
 		List<Rule> ruleGroup = null;
 		Rule previousRule = null;
@@ -143,7 +143,7 @@ public class MergedPattern {
 		for (Rule rule : ruleList) {
 			if (previousRule == null ||
 					rule.isBreak() != previousRule.isBreak()) {
-				ruleGroup = new ArrayList<Rule>();
+				ruleGroup = new ArrayList<>();
 				ruleGroupList.add(ruleGroup);
 			}
 			ruleGroup.add(rule);
@@ -215,10 +215,10 @@ public class MergedPattern {
 			String afterPattern = rule.getAfterPattern();
 			patternBuilder.append("(?:");
 			if (beforePattern.length() > 0) {
-				patternBuilder.append("(?<=" + beforePattern + ")");
+				patternBuilder.append("(?<=").append(beforePattern).append(")");
 			}
 			if (afterPattern.length() > 0) {
-				patternBuilder.append("(?=" + afterPattern + ")");
+				patternBuilder.append("(?=").append(afterPattern).append(")");
 			}
 			patternBuilder.append(")");
 		}

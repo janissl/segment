@@ -88,8 +88,7 @@ public class ReaderCharSequence implements CharSequence {
 				throw new IndexOutOfBoundsException("End of stream.");
 			}
 			int relativeIndex = getRelativeIndex(index);
-			char character = buffer.charAt(relativeIndex);
-			return character;
+			return buffer.charAt(relativeIndex);
 		}
 	}
 
@@ -117,9 +116,8 @@ public class ReaderCharSequence implements CharSequence {
 			}
 			int relativeStart = getRelativeIndex(start);
 			int relativeEnd = getRelativeIndex(end);
-			CharSequence subSequence = buffer.subSequence(relativeStart,
+			return buffer.subSequence(relativeStart,
 					relativeEnd);
-			return subSequence;
 		}
 	}
 

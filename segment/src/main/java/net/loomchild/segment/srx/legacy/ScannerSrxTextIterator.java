@@ -101,8 +101,8 @@ public class ScannerSrxTextIterator extends AbstractTextIterator {
 	
 	private Map<Pattern, Pattern> createExceptions(
 			List<LanguageRule> languageRuleList) {
-		Map<Pattern, Pattern> result = 
-			new LinkedHashMap<Pattern, Pattern>();
+		Map<Pattern, Pattern> result =
+				new LinkedHashMap<>();
 		// Needs to be null first to distinguish empty rule (matching everything)
 		// from no rules (matching nothing).
 		StringBuilder exception = null;
@@ -203,11 +203,7 @@ public class ScannerSrxTextIterator extends AbstractTextIterator {
 					segment.append(result);
 					Pattern pattern = entry.getValue();
 					if (pattern != null) {
-						if (scanner.findWithinHorizon(pattern, 1) != null) {
-							return true;
-						} else {
-							return false;
-						}
+						return scanner.findWithinHorizon(pattern, 1) != null;
 					} else {
 						return false;
 					}
