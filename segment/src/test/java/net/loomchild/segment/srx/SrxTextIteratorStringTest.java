@@ -1,6 +1,6 @@
 package net.loomchild.segment.srx;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,9 +47,9 @@ public class SrxTextIteratorStringTest extends AbstractSrxTextIteratorTest {
 			new SrxTextIterator(MAX_LOOKBEHIND_CONSTRUCT_LENGTH_DOCUMENT, 
 					"", text, parameterMap);
 		List<String> segmentList = segment(textIterator);
-		String[] segmentArray = segmentList.toArray(new String[segmentList.size()]); 
+		String[] segmentArray = segmentList.toArray(new String[0]);
 
-		assertEquals(MAX_LOOKBEHIND_CONSTRUCT_LENGTH_RESULT, segmentArray);
+		assertArrayEquals(MAX_LOOKBEHIND_CONSTRUCT_LENGTH_RESULT, segmentArray);
 	}
 	
 }

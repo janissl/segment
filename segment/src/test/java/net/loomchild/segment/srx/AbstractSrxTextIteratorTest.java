@@ -1,6 +1,6 @@
 package net.loomchild.segment.srx;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -618,8 +618,8 @@ public abstract class AbstractSrxTextIteratorTest {
 		textIterator = getTextIterator(document, languageCode, text);
 		segmentList = segment(textIterator);
 		
-		String[] segmentArray = segmentList.toArray(new String[segmentList.size()]); 
-		assertEquals(expectedResult, segmentArray);
+		String[] segmentArray = segmentList.toArray(new String[0]);
+		assertArrayEquals(expectedResult, segmentArray);
 	}
 
 	protected List<String> segment(TextIterator textIterator) {

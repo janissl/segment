@@ -4,11 +4,7 @@ package net.loomchild.segment.srx;
 import static net.loomchild.segment.util.Util.getParameter;
 
 import java.io.Reader;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -192,60 +188,60 @@ public class SrxTextIterator extends AbstractTextIterator {
 			boolean found = false;
 			
 			while (!found) {
-				
+
 				RuleMatcher minMatcher = getMinMatcher();
-				
-                                if (minMatcher == null && !textManager.hasMoreText()) {
 
-                                        found = true;
-                                        end = textManager.getText().length();
+				if (minMatcher == null && !textManager.hasMoreText()) {
 
-                                } else {
+					found = true;
+					end = textManager.getText().length();
 
-                                        if (textManager.hasMoreText()
-                                                && (minMatcher == null
-                                                || minMatcher.getBreakPosition()
-                                                > textManager.getBufferLength() - margin)) {
+				} else {
 
-                                                if (start == 0) {
-                                                	    // NOTE: another solution would be to increase buffer length
-                                                        CharSequence bufferText = textManager.getText();
-                                                        for (int i = textManager.getBufferLength() - margin; i >= 0; --i) {
-                                                                if (bufferText.charAt(i) == '\n') {
-                                                                        found = true;
-                                                                        end = i;
-                                                                        break;
-                                                                }
-                                                        }
+					if (textManager.hasMoreText()
+							&& (minMatcher == null
+							|| minMatcher.getBreakPosition()
+							> textManager.getBufferLength() - margin)) {
 
-                                                        if (!found) {
-                                                                throw new IllegalStateException(String.format(
-																	"Buffer too short (a segment exceeds %d characters)",
-																	textManager.getBufferLength() - margin));
-                                                        }
+						if (start == 0) {
+							// NOTE: another solution would be to increase buffer length
+							CharSequence bufferText = textManager.getText();
+							for (int i = textManager.getBufferLength() - margin; i >= 0; --i) {
+								if (bufferText.charAt(i) == '\n') {
+									found = true;
+									end = i;
+									break;
+								}
+							}
 
-                                                        break;
-                                                }
+							if (!found) {
+								throw new IllegalStateException(String.format(
+										"Buffer too short (a segment exceeds %d characters)",
+										textManager.getBufferLength() - margin));
+							}
 
-                                                textManager.readText(start);
-                                                start = 0;
-                                                initMatchers();
-                                                minMatcher = getMinMatcher();
+							break;
+						}
 
-                                        }
+						textManager.readText(start);
+						start = 0;
+						initMatchers();
+						minMatcher = getMinMatcher();
 
-                                        if (minMatcher != null) {
-                                                end = minMatcher.getBreakPosition();
+					}
 
-                                                if (end > start) {
-                                                        found = isException(minMatcher);
-                                                        if (found) {
-                                                                cutMatchers();
-                                                        }
-                                                }
-                                        }
-                                }
-				
+					if (minMatcher != null) {
+						end = minMatcher.getBreakPosition();
+
+						if (end > start) {
+							found = isException(minMatcher);
+							if (found) {
+								cutMatchers();
+							}
+						}
+					}
+				}
+
 				moveMatchers();
 			}
 			
@@ -371,8 +367,10 @@ public class SrxTextIterator extends AbstractTextIterator {
 		int minPosition = Integer.MAX_VALUE;
 		RuleMatcher minMatcher = null;
 		for (RuleMatcher matcher : ruleMatcherList) {
-			if (matcher.getBreakPosition() < minPosition) {
-				minPosition = matcher.getBreakPosition();
+			int breakPosition = matcher.getBreakPosition();
+
+			if (breakPosition < minPosition) {
+				minPosition = breakPosition;
 				minMatcher = matcher;
 			}
 		}
